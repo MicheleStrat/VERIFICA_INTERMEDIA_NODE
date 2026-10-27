@@ -1,25 +1,29 @@
-// Mongoose crea e valida i documenti MongoDB secondo uno schema.
+// Modello del catalogo condiviso: ogni documento descrive un'opera Open Library.
 const mongoose = require('mongoose');
 
-// Catalogo comune: il documento Book descrive l'opera, non il possesso di un
-// utente. La relazione personale e lo stato di lettura stanno in UserBook.
+// Lo schema definisce i campi persistiti, i relativi tipi e i vincoli minimi.
 const bookSchema = new mongoose.Schema(
   {
-    // L'ID esterno permette di cercare l'opera e impedisce doppioni locali.
+    // Identificativo Work esterno; unique evita duplicati nel catalogo locale.
     openLibraryId: { type: String, required: true, unique: true }, // es. "OL27448W"
-    // Dati normalizzati da openLibraryService.normalizeBook().
+    // Titolo obbligatorio restituito dalla normalizzazione Open Library.
     title: { type: String, required: true },
+    // Autori dell'opera, memorizzati come elenco di nomi.
     authors: [String],
+    // Anno della prima pubblicazione, se disponibile nel catalogo remoto.
     firstPublishYear: Number,
+    // Numero medio di pagine fornito da Open Library, se disponibile.
     numberOfPages: Number,
+    // Argomenti o categorie associati all'opera.
     subjects: [String],
+    // URL della copertina; puo essere assente se Open Library non ne fornisce una.
     coverUrl: String,
   },
-  // timestamps aggiunge createdAt e updatedAt automaticamente.
+  // Aggiunge automaticamente le date di creazione e ultima modifica.
   { timestamps: true }
 );
 
-// Rimuoviamo i dettagli interni Mongoose dalle risposte JSON dell'API.
+// Esclude dalla serializzazione JSON il contatore interno di versione di Mongoose.
 bookSchema.set('toJSON', {
   transform: (doc, ret) => {
     delete ret.__v;
@@ -27,4 +31,5 @@ bookSchema.set('toJSON', {
   },
 });
 
+// Registra lo schema con Mongoose e rende il modello disponibile agli altri moduli.
 module.exports = mongoose.model('Book', bookSchema);

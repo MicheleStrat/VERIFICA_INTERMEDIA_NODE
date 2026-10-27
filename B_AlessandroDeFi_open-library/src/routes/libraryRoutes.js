@@ -1,18 +1,18 @@
-// Questa router raggruppa gli endpoint relativi alla libreria personale.
+// Definisce gli URL per consultare e modificare la libreria personale.
 const express = require('express');
 const libraryController = require('../controllers/libraryController');
 const requireAuth = require('../middleware/auth');
 
 const router = express.Router();
 
-// Tutte le operazioni sono private: req.user viene aggiunto dal middleware JWT.
+// Autentica ogni richiesta e aggiunge l'utente verificato a req.user.
 router.use(requireAuth);
 
-// POST crea il legame utente-libro; GET elenca o legge un elemento;
-// DELETE rimuove il legame senza cancellare il libro dal catalogo condiviso.
+// Crea una voce, elenca le voci oppure legge o rimuove una voce specifica.
 router.post('/', libraryController.save);
 router.get('/', libraryController.list);
 router.get('/:id', libraryController.getOne);
 router.delete('/:id', libraryController.remove);
 
+// Esporta il router da montare nell'applicazione Express.
 module.exports = router;

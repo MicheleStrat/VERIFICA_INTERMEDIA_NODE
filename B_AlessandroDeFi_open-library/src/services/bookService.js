@@ -3,7 +3,12 @@ const Book = require('../models/Book');
 const openLibrary = require('./openLibraryService');
 const httpError = require('../utils/httpError');
 
-// Restituisce il libro dal database; se manca, recupera i dettagli remoti e li salva.
+/**
+ * Cerca un'opera nel catalogo locale e, se assente, la recupera da Open Library.
+ * @param {string} openLibraryId Identificativo Work dell'opera da trovare.
+ * @returns {Promise<import('../models/Book')>} Documento Book esistente o appena creato.
+ * @throws {Error} Errore HTTP 404 se l'opera non esiste nel catalogo remoto.
+ */
 async function findOrCreateBook(openLibraryId) {
   // La prima query evita chiamate ripetute a Open Library per opere gia note.
   const existing = await Book.findOne({ openLibraryId });
@@ -18,5 +23,5 @@ async function findOrCreateBook(openLibraryId) {
   return Book.create(details);
 }
 
-// Il controller della libreria usa questa funzione per salvare un'opera.
+// Espone al controller la funzione di recupero o creazione del libro.
 module.exports = { findOrCreateBook };

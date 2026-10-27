@@ -1,16 +1,16 @@
-// Le rotte definiscono gli URL; i controller contengono la logica applicativa.
+// Definisce gli URL dei libri e li collega ai rispettivi handler.
 const express = require('express');
 const bookController = require('../controllers/bookController');
 const requireAuth = require('../middleware/auth');
 
 const router = express.Router();
 
-// Protegge sia la ricerca sia il dettaglio: il middleware verifica il Bearer JWT.
+// Richiede un token Bearer valido per tutti gli endpoint di questo router.
 router.use(requireAuth);
 
-// L'ordine e rilevante: /search va definita prima di /:olid per evitare che
-// la parola "search" venga interpretata come identificativo di un'opera.
+// La rotta specifica /search precede quella parametrica /:olid.
 router.get('/search', bookController.search);
 router.get('/:olid', bookController.details);
 
+// Esporta il router da montare nell'applicazione Express.
 module.exports = router;

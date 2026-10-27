@@ -1,31 +1,32 @@
-// L'oggetto UserBook rappresenta il legame tra un utente e un libro del catalogo.
+// Modello della relazione personale fra un utente e un libro del catalogo.
 const mongoose = require('mongoose');
 const STATUSES = require('../config/statuses');
 
-// Libro salvato da un utente nella propria libreria.
+// Lo schema conserva i riferimenti e i dati specifici della libreria personale.
 const userBookSchema = new mongoose.Schema(
   {
-    // ref consente a Mongoose di popolare i riferimenti quando serve restituirli.
+    // Utente proprietario della relazione; ref abilita il popolamento Mongoose.
     user: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
+    // Libro condiviso a cui si riferisce questa voce della libreria.
     book: { type: mongoose.Schema.Types.ObjectId, ref: 'Book', required: true },
+    // Scaffale personale in cui l'utente ha inserito il libro.
     shelf: { type: mongoose.Schema.Types.ObjectId, ref: 'Shelf', required: true },
+    // Stato di lettura limitato ai valori definiti nella configurazione comune.
     status: {
       type: String,
       enum: { values: STATUSES, message: 'Stato non valido' },
       default: 'da_leggere',
     },
   },
-  // Le date permettono anche l'ordinamento per ultima modifica in libreria.
+  // Aggiunge le date di creazione e modifica, usate anche per ordinare la libreria.
   { timestamps: true }
 );
 
-// Uno stesso utente non puo salvare due volte lo stesso libro.
-// Indice composto: lo stesso libro e ammesso in librerie diverse, ma una sola
-// volta per ciascun utente. Il controller intercetta il doppione prima del save;
-// l'indice protegge anche da richieste simultanee.
+// Impedisce che lo stesso utente inserisca piu volte lo stesso libro.
+// Utenti diversi possono comunque avere una relazione con il medesimo Book.
 userBookSchema.index({ user: 1, book: 1 }, { unique: true });
 
-// Non esponiamo __v, contatore interno usato da Mongoose per la versione.
+// Esclude dalla risposta JSON il contatore interno di versione di Mongoose.
 userBookSchema.set('toJSON', {
   transform: (doc, ret) => {
     delete ret.__v;
@@ -33,4 +34,5 @@ userBookSchema.set('toJSON', {
   },
 });
 
+// Registra lo schema con Mongoose e rende il modello disponibile agli altri moduli.
 module.exports = mongoose.model('UserBook', userBookSchema);
