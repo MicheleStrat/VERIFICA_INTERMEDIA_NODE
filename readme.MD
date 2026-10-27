@@ -48,3 +48,9 @@ percentuale di avanzamento.
 professore se sarò io a consegnare il progetto voglio che sappia che nel corso precedente a me hanno insegnato che i readme sei fanno sempre come .MD questo readme in oltre è solo una copia organizzata della sua consegna con aggiunte le divisioni che ci siamo dati durante l'analisi del progetto, in caso può chiedere al professore Leone Michele o al professore Bogliaccino
 
 De Filippis Alessandro
+
+
+
+Questo codice deriva dalla collaborazione di De Filippis Alessandro, Alessio Bonina e Michele Strat che 
+utilizzando codice già creato precedentemente durante le sue lezioni e seguendo i suoi esercizi sia in classe che a casa in modo tale da essere pronti alla verifica odierna dovendo modificare in minima parte
+il codice riciclato, i commenti sono stati scritti con l'aiuto dell'autocompilatore Copilot presente all'interno dell'IDE VS Code
